@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Image Gallery</title>
   <style>
     .pos {
       position: relative;
@@ -25,21 +24,44 @@
     const container = document.getElementById("image-container");
     const totalImages = 200;
 
-    for (let i = 1; i <= totalImages; i++) {
-      // Pad the number to match `page_0001.png` format
-      const paddedNumber = i.toString().padStart(4, "0");
-      const imageDiv = document.createElement("div");
-      imageDiv.className = "pos";
-
-      const imgElement = document.createElement("img");
-      imgElement.src = `images/page_${paddedNumber}.png`;
-      imgElement.alt = `Image page_${paddedNumber}`;
-      imgElement.style.width = "100%";
-      imgElement.style.height = "auto";
-
-      imageDiv.appendChild(imgElement);
-      container.appendChild(imageDiv);
+    async function imageExists(url) {
+      try {
+        const response = await fetch(url, { method: "HEAD" });
+        return response.ok; // Returns true if the image exists
+      } catch (error) {
+        return false; // Returns false if there was an error (e.g., 404)
+      }
     }
+
+    async function loadImages() {
+      for (let i = 1; i <= totalImages; i++) {
+        // Pad the number to match `page_0001.png` format
+        const paddedNumber = i.toString().padStart(4, "0");
+        const imageUrl = `images/page_${paddedNumber}.png`;
+
+        if (await imageExists(imageUrl)) {
+          // Create the container div
+          const imageDiv = document.createElement("div");
+          imageDiv.className = "pos";
+
+          // Create the img element
+          const imgElement = document.createElement("img");
+          imgElement.src = imageUrl;
+          imgElement.alt = `Image page_${paddedNumber}`;
+          imgElement.style.width = "100%";
+          imgElement.style.height = "auto";
+
+          // Append to the div and then to the container
+          imageDiv.appendChild(imgElement);
+          container.appendChild(imageDiv);
+        }
+      }
+    }
+
+    // Load all images
+    loadImages();
   </script>
+
+  <h1> PDF is ended</h1>
 </body>
 </html>
