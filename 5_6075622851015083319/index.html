@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectroChemistry-I</title>
+  <style>
+    .pos {
+      position: relative;
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .pos img {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="image-container"></div>
+
+  <script>
+    const container = document.getElementById("image-container");
+    const totalImages = 200;
+
+    // Function to check if an image exists
+    async function imageExists(url) {
+      try {
+        const response = await fetch(url, { method: "HEAD" });
+        return response.ok; // Returns true if the image exists
+      } catch (error) {
+        return false; // Returns false if there was an error (e.g., 404)
+      }
+    }
+
+    // Function to load images dynamically
+    async function loadImages() {
+      for (let i = 1; i <= totalImages; i++) {
+        // Format the image file name (e.g., page_0001.png)
+        const paddedNumber = i.toString().padStart(0, "0");
+        const imageUrl = `page_${paddedNumber}.png`; // Directly in the root folder
+
+        // Check if the image exists before adding it to the DOM
+        if (await imageExists(imageUrl)) {
+          // Create a div container for the image
+          const imageDiv = document.createElement("div");
+          imageDiv.className = "pos";
+
+          // Create the img element
+          const imgElement = document.createElement("img");
+          imgElement.src = imageUrl;
+          imgElement.alt = `Image page_${paddedNumber}`;
+          imgElement.style.width = "100%";
+          imgElement.style.height = "auto";
+
+          // Append the image to the container div
+          imageDiv.appendChild(imgElement);
+
+          // Add the div to the main container
+          container.appendChild(imageDiv);
+        }
+      }
+    }
+
+    // Call the function to load images
+    loadImages();
+  </script>
+
+  <h1>PDF is ended</h1>
+</body>
+</html>
